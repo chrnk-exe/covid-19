@@ -22,7 +22,6 @@ function searchWords(){
         parents.insertAdjacentHTML("beforeend",`<span></span>`)
         parents = document.querySelector("span")
         const arrayData = data[0]
-        console.log(arrayData);
         parents.insertAdjacentHTML("beforeend",`<h1>Your Word --- ${arrayData.word}</h1>`)
         for(let firstKeys in arrayData.phonetics)
         for(let secondKeys in arrayData.phonetics[firstKeys]){
