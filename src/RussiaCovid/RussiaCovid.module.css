@@ -17,3 +17,13 @@
     padding: 15px;
     margin-top: 10px;
 }
+
+.period {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.customPeriod {
+    margin-left: 10px;
+}
