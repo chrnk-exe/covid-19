@@ -5,7 +5,7 @@ import RussiaCovid from './RussiaCovid/RussiaCovid';
 import WorldCovid from './WorldCovid/WorldCovid';
 
 function App() {
-  const [world, setWorld] = useState(true);
+  const [world, setWorld] = useState(false);
 
   const keyHandler = (selectedKey) => {
     selectedKey === 'Russia' ? setWorld(false) : setWorld(true);
