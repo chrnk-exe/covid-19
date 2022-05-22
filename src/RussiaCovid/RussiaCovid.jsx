@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 import {DropdownButton, Dropdown, Button} from 'react-bootstrap'
-import {createPeriod, currentDate, Month, formatData, randomInteger} from './dataApi'
+import {createPeriod, currentDate, randomInteger, getData} from './dataApi'
 
 ChartJS.register(
     CategoryScale,
