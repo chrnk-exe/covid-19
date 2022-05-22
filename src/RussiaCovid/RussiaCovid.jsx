@@ -11,15 +11,7 @@ import {
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 import {DropdownButton, Dropdown, Button} from 'react-bootstrap'
-
-function randomInteger(min, max) {
-  let rand = min + Math.random() * (max + 1 - min);
-  return Math.floor(rand);
-}
-
-const Month = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
- 'сентябрь', 'октябрь', "ноябрь", "декабрь"]
-const currentDate = new Date()
+import {createPeriod, currentDate, Month, formatData, randomInteger} from './dataApi'
 
 ChartJS.register(
     CategoryScale,
@@ -30,12 +22,10 @@ ChartJS.register(
     Legend,
 );
 
-function formatData(date) {
-  date = new Date(date)
-  return [date.getDate(), Month[date.getMonth()]].join(' ')
-}
-
 const AllCases = 'Все случаи заражения'
+const NewVacations = 'Новые дозы'
+const AllVacations = 'Всего введёных доз'
+const FullyVaccinated = 'Прошло полную вакцинацию'
 const NewCases = 'Новые случаи заражения'
 const LethalCases = 'Летальные исходы'
 const RecoveryCases = 'Случаи выздоровления'
@@ -46,55 +36,40 @@ const colors = {
   'Новые случаи заражения': "#FFE92F",
   'Летальные исходы': '#89929A',
   'Случаи выздоровления': '#19E154',
+  'Новые дозы': '#89929A',
+  'Всего введёных доз': "#FFE92F",
+  'Прошло полную вакцинацию': '#19E154'
+}
+
+const requests = {
+  'Все случаи заражения': '/all_cases',
+  'Новые случаи заражения': '/new_cases',
+  'Летальные исходы': '/lethal_cases',
+  'Случаи выздоровления': '/recovery_cases',
+  'Новые дозы': '/new_vacations',
+  'Всего введёных доз': '/all_vacations',
+  'Прошло полную вакцинацию': '/fully_vaccinated'
 }
 
 const RussiaCovid = () => {
-
+  const [vacationsGraph, setVacations] = useState(false)
   const [period, setPeriod] = useState(3)
   const [customPeriod, setCustomPeriod] = useState({
     start: new Date(),
     finish: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 14)
   })
   const [parameters, setParameters] = useState([NewCases])
-
-
-  const periods = {
-    '1': 'allTime',
-    '2': 14,
-    '3': 30,
-    '4': 90,
-    '5': 180,
-    '6': 'customPeriod',
-  }
-
   const [labels, setLabels] = useState(createPeriod(period))
   const [data, setData] = useState({
     labels,
     datasets: [
       {
-        label: 'Новые случаи заражения',
+        label: NewCases,
         data: labels.map(() => randomInteger(0, 10000)),
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        backgroundColor: colors[NewCases],
       },
     ],
   })
-
-  function createPeriod(start, finish){
-    let dates = []
-    if(finish){
-      const oneDay = 1000 * 60 * 60 * 24; 
-      const diffTime = Math.round(Math.abs(start.getTime() - finish.getTime()) / oneDay + 1)
-      for(let i = 0; i < diffTime; i++){
-        dates.push(formatData(new Date(finish.getFullYear(), finish.getMonth(), finish.getDate() - i)));
-      }
-      return dates
-    } else if(start) {
-      for(let i = 0; i < periods[start]; i++){
-        dates.push(formatData(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - i)));
-      }
-      return dates
-    }
-  }
 
   const options = {
     responsive: true,
@@ -153,14 +128,25 @@ const RussiaCovid = () => {
       setParameters([Diff])
       localParams = [Diff]
     }
-    setData({
+    if(localParams.length === 1 && localParams[0] === Diff) {
+      setData({
+        labels,
+        datasets: localParams.map(item => ({
+          label: 'Разница заболевших и выздоровевших',
+          data: labels.map(() => randomInteger(0, 10000) - randomInteger(0, 10000)),
+          backgroundColor: '#19E154',
+          }))
+        })
+    } else {
+      setData({
       labels,
       datasets: localParams.map(item => ({
         label: item,
         data: labels.map(() => randomInteger(0, 10000)),
         backgroundColor: colors[item],
-      }))
-    })
+        }))
+      })
+    }
   }
 
   const deleteParameterHandler = event => {
@@ -176,8 +162,17 @@ const RussiaCovid = () => {
     })
   }
 
+  const switchParams = event => {
+    setVacations(event.target.value === 'Vacations')
+    setParameters([])
+  }
+
   return (
     <div className={classes.main}>
+      <nav className={classes.menu}>
+        <Button value='Covid' onClick={switchParams} size='sm' className={classes.parametersBtn} variant='dark'>Статистика распространения</Button>
+        <Button value='Vacations' onClick={switchParams} size='sm' className={classes.parametersBtn} variant='dark'>Статистика вакцинирования</Button>
+      </nav>
       <Bar options={options} data={data}></Bar>
       <div className={classes.options}>
         <div className={classes.period}>
@@ -199,7 +194,8 @@ const RussiaCovid = () => {
             : null
           }
         </div>
-        <div className={classes.parameters}>
+        { !vacationsGraph
+        ? (<div className={classes.parameters}>
           <div className={classes.parametersToAdd}>
             <Button onClick={parametersHandler} value={AllCases} className={classes.parametersBtn} variant='danger'>Все случаи заболевания</Button>
             <Button onClick={parametersHandler} value={NewCases} className={classes.parametersBtn} variant='warning'>Новые случаи заболевания</Button>
@@ -222,7 +218,32 @@ const RussiaCovid = () => {
               ))
             }
           </div>
-        </div>
+        </div>)
+        : (
+          <div className={classes.parameters}>
+            <div className={classes.parametersToAdd}>
+              <Button size='lg' onClick={parametersHandler} value={NewVacations} className={classes.parametersBtn} variant='secondary'>{NewVacations}</Button>
+              <Button size='lg' onClick={parametersHandler} value={AllVacations} className={classes.parametersBtn} variant='warning'>{AllVacations}</Button>
+              <Button size='lg' onClick={parametersHandler} value={FullyVaccinated} className={classes.parametersBtn} variant='success'>{FullyVaccinated}</Button>
+            </div>
+            <div className={classes.addedParameters}>
+            {
+              parameters.map((param, index) => (
+                <div key={index}>
+                  <Button 
+                  value={param} 
+                  onClick={deleteParameterHandler} 
+                  className={classes.parametersBtn} 
+                  variant='outline-dark'>
+                    {param} ×
+                  </Button>
+                </div>
+              ))
+            }
+            </div>
+          </div>
+        )
+        }
       </div>
       
     </div>
