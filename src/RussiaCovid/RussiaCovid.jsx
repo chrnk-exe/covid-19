@@ -21,7 +21,6 @@ const Month = ['январь', 'февраль', 'март', 'апрель', 'м
  'сентябрь', 'октябрь', "ноябрь", "декабрь"]
 const currentDate = new Date()
 
-
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -30,7 +29,6 @@ ChartJS.register(
     Tooltip,
     Legend,
 );
-// const labels2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
 function formatData(date) {
   date = new Date(date)
@@ -44,10 +42,10 @@ const RecoveryCases = 'Случаи выздоровления'
 const Diff = 'Нагрузка на систему здравоохранения'
 
 const colors = {
-  AllCases: "#FE5767",
-  NewCases: "#FFE92F",
-  LethalCases: '#89929A',
-  RecoveryCases: '#19E154',
+  'Все случаи заражения': "#FE5767",
+  'Новые случаи заражения': "#FFE92F",
+  'Летальные исходы': '#89929A',
+  'Случаи выздоровления': '#19E154',
 }
 
 const RussiaCovid = () => {
@@ -129,18 +127,53 @@ const RussiaCovid = () => {
   }
 
   const changePeriodHandler = eventKey => {
+    const localLabels = createPeriod(eventKey)
     setPeriod(eventKey)
-    setLabels(createPeriod(eventKey))
+    setLabels(localLabels)
+    setData({
+      labels: localLabels,
+      datasets: parameters.map(item => ({
+        label: item,
+        data: localLabels.map(() => randomInteger(0, 10000)),
+        backgroundColor: colors[item],
+      }))
+    })
   }
 
   const parametersHandler = event => {
-    if(!parameters.includes(event.target.value) && !(parameters.length == 1 && parameters[0] === Diff))setParameters([...parameters, event.target.value])
-    else setParameters([event.target.value])
-    if(event.target.value === Diff)setParameters([Diff])
+    let localParams
+    if(!parameters.includes(event.target.value) && !(parameters.length == 1 && parameters[0] === Diff)){
+      setParameters([...parameters, event.target.value])
+      localParams = [...parameters, event.target.value]
+    } else {
+      setParameters([event.target.value])
+      localParams = [event.target.value]
+    }
+    if(event.target.value === Diff){
+      setParameters([Diff])
+      localParams = [Diff]
+    }
+    setData({
+      labels,
+      datasets: localParams.map(item => ({
+        label: item,
+        data: labels.map(() => randomInteger(0, 10000)),
+        backgroundColor: colors[item],
+      }))
+    })
   }
 
   const deleteParameterHandler = event => {
+    let localParams = parameters.filter(param => param != event.target.value)
     setParameters(parameters.filter(param => param != event.target.value))
+    setData({
+      labels,
+      datasets: localParams.map(item => ({
+        label: item,
+        data: labels.map(() => randomInteger(0, 10000)),
+        backgroundColor: colors[item],
+      }))
+    })
   }
 
   return (
