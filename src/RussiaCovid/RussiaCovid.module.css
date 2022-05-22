@@ -27,3 +27,21 @@
 .customPeriod {
     margin-left: 10px;
 }
+
+.parameters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-block: 10px;
+}
+.parametersToAdd {
+    border-right: 1px solid lightgray;
+    padding-right: 5px;
+}
+
+.addedParameters {
+    padding-left: 5px;
+}
+
+.parametersBtn {
+    margin-block: 5px;
+}
