@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 import {DropdownButton, Dropdown, Button} from 'react-bootstrap'
-import {createPeriod, currentDate, randomInteger, getData} from './dataApi'
+import {createPeriod, currentDate, randomInteger, getData, colors} from './dataApi'
 
 ChartJS.register(
     CategoryScale,
@@ -30,16 +30,6 @@ const NewCases = 'Новые случаи заражения'
 const LethalCases = 'Летальные исходы'
 const RecoveryCases = 'Случаи выздоровления'
 const Diff = 'Нагрузка на систему здравоохранения'
-
-const colors = {
-  'Все случаи заражения': "#FE5767",
-  'Новые случаи заражения': "#FFE92F",
-  'Летальные исходы': '#89929A',
-  'Случаи выздоровления': '#19E154',
-  'Новые дозы': '#89929A',
-  'Всего введёных доз': "#FFE92F",
-  'Прошло полную вакцинацию': '#19E154'
-}
 
 const requests = {
   'Все случаи заражения': '/all_cases',
@@ -177,16 +167,16 @@ const RussiaCovid = () => {
       <div className={classes.options}>
         <div className={classes.period}>
           <DropdownButton onSelect={changePeriodHandler} variant='primary' title='Период'>
-            <Dropdown.Item eventKey='1' active={period === '1'}>Всё время</Dropdown.Item>
-            <Dropdown.Item eventKey='2' active={period === '2'}>2 Недели</Dropdown.Item>
-            <Dropdown.Item eventKey='3' active={period === '3'}>Месяц</Dropdown.Item>
-            <Dropdown.Item eventKey='4' active={period === '4'}>3 Месяца</Dropdown.Item>
-            <Dropdown.Item eventKey='5' active={period === '5'}>6 Месяцев</Dropdown.Item>
+            <Dropdown.Item eventKey='5' active={period === '5'}>Всё время</Dropdown.Item>
+            <Dropdown.Item eventKey='1' active={period === '1'}>2 Недели</Dropdown.Item>
+            <Dropdown.Item eventKey='2' active={period === '2'}>Месяц</Dropdown.Item>
+            <Dropdown.Item eventKey='3' active={period === '3'}>3 Месяца</Dropdown.Item>
+            <Dropdown.Item eventKey='4' active={period === '4'}>6 Месяцев</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item eventKey='6' active={period === '6'}>Произвольный период</Dropdown.Item>
+            <Dropdown.Item eventKey='0' active={period === '0'}>Произвольный период</Dropdown.Item>
           </DropdownButton>
           {
-            period === '6' 
+            period === '0' 
             ? <div className={classes.customPeriod}>
                 From <input name='start' onChange={customPeriodHandler} type='date'/> to <input name='finish' onChange={customPeriodHandler} type='date'/> {' '} 
                 <Button onClick={changeCustomPeriodHandler} variant='success'>OK</Button>

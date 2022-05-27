@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const periods = {
-    '1': 'allTime',
-    '2': 14,
-    '3': 30,
-    '4': 90,
-    '5': 180,
-    '6': 'customPeriod',
-  }
+export const periods = {
+  '0': 'customPeriod',
+  '1': 14,
+  '2': 30,
+  '3': 90,
+  '4': 180,
+  '5': 'allTime',
+}
 
 export function createPeriod(start, finish){
     let dates = []
@@ -53,4 +53,14 @@ export async function getData(request, ...params){
     // }
 
     return 
+}
+
+export const colors = {
+  'Все случаи заражения': "#FE5767",
+  'Новые случаи заражения': "#FFE92F",
+  'Летальные исходы': '#89929A',
+  'Случаи выздоровления': '#19E154',
+  'Новые дозы': '#89929A',
+  'Всего введёных доз': "#FFE92F",
+  'Прошло полную вакцинацию': '#19E154'
 }

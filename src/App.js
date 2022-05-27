@@ -1,38 +1,16 @@
-import React, {useState} from 'react';
-import {Nav} from 'react-bootstrap';
+import React from 'react';
 import classes from './App.module.css';
-import RussiaCovid from './RussiaCovid/RussiaCovid';
-import WorldCovid from './WorldCovid/WorldCovid';
+import RussiaCovidApp from './RussiaCovid/RussiaCovidApp';
 
 function App() {
-  const [world, setWorld] = useState(false);
-
-  const keyHandler = (selectedKey) => {
-    selectedKey === 'Russia' ? setWorld(false) : setWorld(true);
-  };
-
   return (
     <div className={classes.App}>
       <header className={classes.header}>
-        <Nav justify variant='tabs' onSelect={keyHandler}>
-          <Nav.Item/>
-          <Nav.Item>
-            <Nav.Link eventKey="Russia">В России</Nav.Link >
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="World">В Мире</Nav.Link>
-          </Nav.Item>
-          <Nav.Item/>
-        </Nav>
+        <h2>Анализ динамики распространения Covid-19 в России</h2>
       </header>
       <main className={classes.main}>
-        {
-          world ? <WorldCovid/> : <RussiaCovid/>
-        }
+        <RussiaCovidApp/>
       </main>
-      <footer>
-
-      </footer>
     </div>
   );
 }
