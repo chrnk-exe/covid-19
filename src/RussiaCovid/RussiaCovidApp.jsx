@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
-import RussiaCovid from './RussiaCovid';
+import axios from 'axios'
+import RussiaCovid from '../RussiaCovid';
 import classes from './RussiaCovidApp.module.css'
 import {Dropdown, DropdownButton, Button} from 'react-bootstrap';
-import {createPeriod, currentDate, randomInteger, getData, colors, periods} from './dataApi'
-import GraphItem from './GraphItem';
+import {createPeriod, currentDate, randomInteger, getData, colors, periods} from '../dataApi'
+import GraphItem from '../GraphItem';
 
 const AllCases = 'Все случаи заражения'
 const NewVacations = 'Новые дозы'
@@ -80,6 +81,15 @@ const RussiaCovidApp = () => {
         setPeriod(eventKey)
         setLabels(localLabels)
       }
+      
+    const request = async () => {
+      console.log('clicked!')
+      let resp = await axios({
+        method: 'get',
+        url: '/api/Diseaseds/New?Period=1&DateFrom=2022-05-29T12%3A28%3A07.792Z'
+      })
+      console.log(resp)
+    }
 
   return (
     <div className={classes.App}>
@@ -100,7 +110,7 @@ const RussiaCovidApp = () => {
                     С <input name='start' onChange={customPeriodHandler} type='date'/> по <input name='finish' onChange={customPeriodHandler} type='date'/> {' '} 
                     <Button style={{marginTop:'5px'}} onClick={changeCustomPeriodHandler} variant='success'>OK</Button>
                 </div>
-                : <button onClick={() => console.log(dateHandler(period, labels))}>console.log</button>
+                : null
             }
             </div>
         </div>

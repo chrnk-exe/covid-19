@@ -40,5 +40,6 @@
   "devDependencies": {
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.29.4"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

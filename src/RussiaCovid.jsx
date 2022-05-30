@@ -41,7 +41,7 @@ const requests = {
   'Прошло полную вакцинацию': '/fully_vaccinated'
 }
 
-const RussiaCovid = () => {
+const RussiaCovid = ({country}) => {
   const [vacationsGraph, setVacations] = useState(false)
   const [period, setPeriod] = useState(3)
   const [customPeriod, setCustomPeriod] = useState({
