@@ -41,10 +41,10 @@ export const Month = ['январь', 'февраль', 'март', 'апрел�
   
 export const currentDate = new Date()
 
-export async function getData(request, ...params){
+export async function getData(request, country, ...params){
     // let resp = await axios({
     //     method: 'get',
-    //     url: request,
+    //     url: request + '_' + country,
     // })
     // if(resp.status == 200){
     //     return new Promise((resolve, reject) => {

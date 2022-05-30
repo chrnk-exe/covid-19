@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import RussiaCovid from '../RussiaCovid';
+import GraphAggregator from '../GraphAggregator';
 import classes from './RussiaCovidApp.module.css'
 import {Dropdown, DropdownButton, Button} from 'react-bootstrap';
 import {createPeriod, currentDate, randomInteger, getData, colors, periods} from '../dataApi'
@@ -123,7 +123,7 @@ const RussiaCovidApp = () => {
         </div>
         <div>
             <h2>Агрегатор графиков</h2>
-            <RussiaCovid/>
+            <GraphAggregator country="Россия"/>
         </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import classes from './RussiaCovid.module.css';
+import classes from './GraphAggregator.module.css';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -41,7 +41,7 @@ const requests = {
   'Прошло полную вакцинацию': '/fully_vaccinated'
 }
 
-const RussiaCovid = ({country}) => {
+const GraphAggregator = ({country}) => {
   const [vacationsGraph, setVacations] = useState(false)
   const [period, setPeriod] = useState(3)
   const [customPeriod, setCustomPeriod] = useState({
@@ -74,7 +74,7 @@ const RussiaCovid = ({country}) => {
       },
       title: {
         display: true,
-        text: 'Covid-19 in Russia',
+        text: 'Covid-19 in ' + country,
       },
     },
   };
@@ -240,4 +240,4 @@ const RussiaCovid = ({country}) => {
   );
 };
 
-export default RussiaCovid;
+export default GraphAggregator;
