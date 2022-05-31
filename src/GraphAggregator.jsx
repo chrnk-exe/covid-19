@@ -41,15 +41,33 @@ const requests = {
   'Прошло полную вакцинацию': '/fully_vaccinated'
 }
 
+
+//агрегатор графиков, то есть место, где их можно накладывать друг на друга
 const GraphAggregator = ({country}) => {
-  const [vacationsGraph, setVacations] = useState(false)
-  const [period, setPeriod] = useState(3)
+  //переключатель агрегатора с вакцинаций на случаи заражения
+  const [vacationsGraph, setVacations] = useState(false) 
+
+  //период, пояснения к нему в dataApi.js 
+  const [period, setPeriod] = useState(3) 
+
+  //среди периодов можно выбрать свой, период можно описать первой датой и последней, 
+  //изначально он 2 недели с текущей даты
   const [customPeriod, setCustomPeriod] = useState({
     start: new Date(),
     finish: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 14)
   })
+
+  //какие параметры отображаются на графике
   const [parameters, setParameters] = useState([NewCases])
+
+  //это подписи к графикам снизу, обозначение их дат
   const [labels, setLabels] = useState(createPeriod(period))
+  
+  //тут хранятся данные для построения графиков
+  //labels - подписи к ним снизу
+  //datasets - массив из самих данных. Каждый элемент массива объект с тремя полями
+  //самый сок в поле data. Там, когда api будет готово будет функция getData, которая уже и возвращает
+  //нужные данные в нужном виде, причём она будет асинхронная
   const [data, setData] = useState({
     labels,
     datasets: [
@@ -61,6 +79,7 @@ const GraphAggregator = ({country}) => {
     ],
   })
 
+  //настройки графика, пришлось перевернуть ось X, чтобы даты шли слева направо
   const options = {
     responsive: true,
     scales: {
@@ -79,20 +98,25 @@ const GraphAggregator = ({country}) => {
     },
   };
 
+  //обработка инпутов с датами
   const customPeriodHandler = event => {
     event.target.name === 'start' 
     ? setCustomPeriod({...customPeriod, start: new Date(event.target.value)}) 
     : setCustomPeriod({...customPeriod, finish: new Date(event.target.value)}) 
   }
 
+  //изменение периода, на самом деле тут надо будет менять и data, но api ещё нет
   const changeCustomPeriodHandler = event => {
     const start = new Date(customPeriod.start)
     const finish = new Date(customPeriod.finish)
     setLabels(createPeriod(start, finish))
   }
 
+  //просто изменение периода
   const changePeriodHandler = eventKey => {
-    const localLabels = createPeriod(eventKey)
+    const localLabels = createPeriod(eventKey) //<-- чтобы в setData было свежее изменение, потому что
+    //все функции изменения состояния компонента срабатывают не сразу, это добавили в новом реакте, чтобы
+    //при каждом setState не перерендеривался компонент
     setPeriod(eventKey)
     setLabels(localLabels)
     setData({
@@ -105,6 +129,9 @@ const GraphAggregator = ({country}) => {
     })
   }
 
+  //здесь поведение добавления различных параметров графика
+  //сделал так, чтоб последний параметр Diff мог всегда быть только один, потому что он по своей сути
+  //производная от остальных графиков
   const parametersHandler = event => {
     let localParams
     if(!parameters.includes(event.target.value) && !(parameters.length == 1 && parameters[0] === Diff)){
@@ -118,6 +145,8 @@ const GraphAggregator = ({country}) => {
       setParameters([Diff])
       localParams = [Diff]
     }
+
+    //отдельная обработка параметра Diff
     if(localParams.length === 1 && localParams[0] === Diff) {
       setData({
         labels,
@@ -139,6 +168,7 @@ const GraphAggregator = ({country}) => {
     }
   }
 
+  //тут ничего сложного, просто удаление одного из параметров
   const deleteParameterHandler = event => {
     let localParams = parameters.filter(param => param != event.target.value)
     setParameters(parameters.filter(param => param != event.target.value))
@@ -152,6 +182,7 @@ const GraphAggregator = ({country}) => {
     })
   }
 
+  //свич с вакцинаций на больных и обратно
   const switchParams = event => {
     setVacations(event.target.value === 'Vacations')
     setParameters([])

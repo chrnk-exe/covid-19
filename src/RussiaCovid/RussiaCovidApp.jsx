@@ -17,6 +17,7 @@ const Diff = 'Нагрузка на систему здравоохранени�
 
 const OperationalData = [AllCases, RecoveryCases, LethalCases, FullyVaccinated]
 
+//как примерно будут выглядеть запросы
 const requests = {
   'Все случаи заражения': '/all_cases',
   'Новые случаи заражения': '/new_cases',
@@ -44,6 +45,8 @@ const options = {
       },
     },
 };
+
+
 const RussiaCovidApp = () => {
     const [period, setPeriod] = useState('1')
     const [labels, setLabels] = useState(createPeriod(period))

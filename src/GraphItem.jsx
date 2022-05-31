@@ -39,6 +39,8 @@ const options = {
     },
   };
 
+
+//просто график который отображает что ему дали, по url надо будет как раз и забирать данные с бэка
 const GraphItem = ({children, labels, label, url}) => {
     const data = {
         labels,
@@ -48,7 +50,6 @@ const GraphItem = ({children, labels, label, url}) => {
             backgroundColor: colors[label]
         }]
     }
-    // const [data, setData] = useState()
 
   return (
     <div className={classes.graphItem}>
