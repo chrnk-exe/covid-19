@@ -1,11 +1,8 @@
 import React, {useState} from 'react'
-import axios from 'axios'
-import GraphAggregator from '../GraphAggregator';
 import classes from './RussiaCovidApp.module.css'
 import {Dropdown, DropdownButton, Button, Nav} from 'react-bootstrap';
 import {Bar, Line} from 'react-chartjs-2'
 import {createPeriod, currentDate, randomInteger, getData, colors, periods, dateHandler} from '../dataApi'
-import GraphItem from '../GraphItem';
 import forward from './forward.svg'
 import back from './back.svg'
 
@@ -17,8 +14,6 @@ const NewCases = 'Новые случаи заражения'
 const LethalCases = 'Летальные исходы'
 const RecoveryCases = 'Случаи выздоровления'
 const Diff = 'Нагрузка на систему здравоохранения'
-
-const OperationalData = [AllCases, RecoveryCases, LethalCases, FullyVaccinated]
 
 //как примерно будут выглядеть запросы
 const requests = {
@@ -299,6 +294,7 @@ const RussiaCovidApp = () => {
               ? <Bar options={options} data={data}></Bar>
               : <Line options={options} data={data}></Line>
             }
+            <Button onClick={() => alert('Хаха... Не работает ещё!')} style={{marginTop: '20px'}} variant='primary'>Download on PNG</Button>
           </div>
         </main>
         {/* <div>
