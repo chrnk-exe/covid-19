@@ -10,13 +10,13 @@ function App() {
     <div className={classes.App}>
       <header className={classes.header}>
         {/* <h2>Анализ динамики распространения Covid-19 в России</h2> */}
-        <Nav justify variant='tabs' onSelect={(selectedKey) => setWorld(selectedKey === "World")}>
+        <Nav className={classes.navigation} variant='tabs' onSelect={(selectedKey) => setWorld(selectedKey === "World")} defaultActiveKey={'Russia'}>
         <Nav.Item/>
         <Nav.Item>
-          <Nav.Link eventKey="Russia">В России</Nav.Link>
+          <Nav.Link className={classes.navItem} eventKey="Russia">В России</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="World">В Мире</Nav.Link>
+          <Nav.Link className={classes.navItem} eventKey="World">В Мире</Nav.Link>
         </Nav.Item>
         <Nav.Item/>
       </Nav>

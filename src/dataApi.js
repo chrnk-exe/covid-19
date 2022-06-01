@@ -50,10 +50,14 @@ export const currentDate = new Date()
 // вот тут должен быть запрос внутри которого и обрабатываются данные
 // https://github.com/axios/axios документация к axios, там описано что возвращает и как с ней работать,
 // почти такая же штука как и fetch, но немного посильнее
-export async function getData(request, country, ...params){
+export async function getData(request, labels, country, ...params){
     let resp = await axios({
         method: 'get',
         url: request + '_' + country,
+        data: {
+          first_date: labels[labels.length-1],
+          last_date: labels[0]
+        }
     })
     
     //handling resp
@@ -77,4 +81,16 @@ export const colors = {
   'Новые дозы': '#89929A',
   'Всего введёных доз': "#FFE92F",
   'Прошло полную вакцинацию': '#19E154'
+}
+
+export const dateHandler = (period, labels) => {
+  switch(period){
+      case '0': return labels.length + ' дней'
+      case '1': return '14 дней'
+      case '2': return 'месяц'
+      case '3': return '3 месяца'
+      case '4': return 'полгода'
+      case '5': return 'всё время'
+      default: return ' '
+  }
 }

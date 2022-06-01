@@ -8,6 +8,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  PointElement,
+  LineElement,
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 import {DropdownButton, Dropdown, Button} from 'react-bootstrap'
@@ -17,6 +19,8 @@ ChartJS.register(
     CategoryScale,
     LinearScale,
     BarElement,
+    PointElement,
+    LineElement,
     Title,
     Tooltip,
     Legend,
@@ -183,17 +187,12 @@ const GraphAggregator = ({country}) => {
   }
 
   //свич с вакцинаций на больных и обратно
-  const switchParams = event => {
-    setVacations(event.target.value === 'Vacations')
-    setParameters([])
-  }
-
   return (
     <div className={classes.main}>
-      <nav className={classes.menu}>
+      {/* <nav className={classes.menu}>
         <Button value='Covid' onClick={switchParams} size='sm' className={classes.parametersBtn} variant='dark'>Статистика распространения</Button>
         <Button value='Vacations' onClick={switchParams} size='sm' className={classes.parametersBtn} variant='dark'>Статистика вакцинирования</Button>
-      </nav>
+      </nav> */}
       <Bar options={options} data={data}></Bar>
       <div className={classes.options}>
         <div className={classes.period}>
