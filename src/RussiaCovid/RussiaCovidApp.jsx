@@ -110,12 +110,14 @@ const RussiaCovidApp = () => {
     },
   };  
 
+  //изменение состояния кастомного периода
   const customPeriodHandler = event => {
       event.target.name === 'start' 
       ? setCustomPeriod({...customPeriod, start: new Date(event.target.value)}) 
       : setCustomPeriod({...customPeriod, finish: new Date(event.target.value)}) 
   }
     
+  //изменение labels на введённый кастомный период
   const changeCustomPeriodHandler = event => {
     const start = new Date(customPeriod.start)
     const finish = new Date(customPeriod.finish)
@@ -143,6 +145,7 @@ const RussiaCovidApp = () => {
     storage.setItem('labels', JSON.stringify(localLabels))
   }
 
+  //изменение вида периода (0-5)
   const changePeriodHandler = eventKey => {
       const localLabels = createPeriod(eventKey)
       setPeriod(eventKey)
@@ -170,6 +173,7 @@ const RussiaCovidApp = () => {
       storage.setItem('period', JSON.stringify(eventKey))
   }
 
+  //изменение с вакцинаций на больных
   const switchParams = event => {
     setVacations(event.target.value === 'Vacations')
     setParameters([])
@@ -328,9 +332,6 @@ const RussiaCovidApp = () => {
             <Button onClick={downloadGraphHandler} style={{marginTop: '20px'}} variant='primary'>Download on PNG</Button>
           </div>
         </main>
-        {/* <div>
-            
-        </div> */}
     </div>
   )
 }
