@@ -13,8 +13,9 @@
   height: 60px;
   width: 100%;
   /* background-color: #9eff8b; */
-  padding: 10px 0;
-
+  padding: 10px 5%;
+  color: #FFFFF1;
+  background-color: darkslategray;
 }
 
 .main {
@@ -36,4 +37,29 @@ header .navigation {
   text-align: center;
   font-weight: 700;
   /* color: #FFFFF1 */
+}
+
+@keyframes magic {
+  from {
+    background-position: 0 0;
+ }
+  to {
+    background-position: 100% 100%;
+ }
+}
+
+.logo:hover {
+  font-weight: 700;
+  background-image: linear-gradient(to right, #fd1d1d, #fcb045, #fcef45, #81fc45, #45d8fc, #5245fc, #af45fc);
+	background-size: 200% 200%;
+  animation: magic 3s infinite linear alternate;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.logo {
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-weight: 700;
 }

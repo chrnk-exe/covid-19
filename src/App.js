@@ -1,31 +1,26 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import classes from './App.module.css';
 import RussiaCovidApp from './RussiaCovid/RussiaCovidApp';
 import {Nav} from 'react-bootstrap'
 import WorldCovidApp from './WorldCovid/WorldCovidApp';
 
+const storage = window.localStorage
+
 function App() {
   const [world, setWorld] = useState(false);
+  useEffect(() => {
+    return () => {
+      storage.clear()
+    }
+  }, [])
   return (
     <div className={classes.App}>
       <header className={classes.header}>
-        {/* <h2>Анализ динамики распространения Covid-19 в России</h2> */}
-        <Nav className={classes.navigation} variant='tabs' onSelect={(selectedKey) => setWorld(selectedKey === "World")} defaultActiveKey={'Russia'}>
-        <Nav.Item/>
-        <Nav.Item>
-          <Nav.Link className={classes.navItem} eventKey="Russia">В России</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link className={classes.navItem} eventKey="World">В Мире</Nav.Link>
-        </Nav.Item>
-        <Nav.Item/>
-      </Nav>
+        <h3 className={classes.logo}>Анализ динамики распространения Covid-19 в России</h3>
       </header>
       
       <main className={classes.main}>
-        {world 
-        ?<WorldCovidApp/>
-        :<RussiaCovidApp/>}
+        <RussiaCovidApp/>
       </main>
     </div>
   );

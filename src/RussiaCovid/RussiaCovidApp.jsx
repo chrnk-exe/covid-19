@@ -47,6 +47,8 @@ const options = {
 const BAR = 'Bar'
 const LINE_CHART = 'chart'
 
+const storage = window.localStorage
+
 const RussiaCovidApp = () => {
   //вид графика 
   const [graph, setGraph] = useState(BAR)
@@ -55,10 +57,10 @@ const RussiaCovidApp = () => {
   const [active, setActive] = useState(true)
 
   //переключатель агрегатора с вакцинаций на случаи заражения
-  const [vacationsGraph, setVacations] = useState(false) 
+  const [vacationsGraph, setVacations] = useState(JSON.parse(storage.getItem('vac')) ?? false) 
 
   //период, пояснения к нему в dataApi.js 
-  const [period, setPeriod] = useState(3) 
+  const [period, setPeriod] = useState(JSON.parse(storage.getItem('period')) ?? 3) 
 
   //среди периодов можно выбрать свой, период можно описать первой датой и последней, 
   //изначально он 2 недели с текущей даты
@@ -68,17 +70,17 @@ const RussiaCovidApp = () => {
   })
 
   //какие параметры отображаются на графике
-  const [parameters, setParameters] = useState([NewCases])
+  const [parameters, setParameters] = useState(JSON.parse(storage.getItem('params')) ?? [NewCases])
 
   //это подписи к графикам снизу, обозначение их дат
-  const [labels, setLabels] = useState(createPeriod(period))
+  const [labels, setLabels] = useState(JSON.parse(storage.getItem('labels')) ?? createPeriod(period))
   
   //тут хранятся данные для построения графиков
   //labels - подписи к ним снизу
   //datasets - массив из самих данных. Каждый элемент массива объект с тремя полями
   //самый сок в поле data. Там, когда api будет готово будет функция getData, которая уже и возвращает
   //нужные данные в нужном виде, причём она async
-  const [data, setData] = useState({
+  const [data, setData] = useState(JSON.parse(storage.getItem('data')) ?? {
     labels,
     datasets: [
       {
@@ -106,62 +108,74 @@ const RussiaCovidApp = () => {
         text: 'Covid-19 в России ',
       },
     },
-  };
+  };  
 
+  const customPeriodHandler = event => {
+      event.target.name === 'start' 
+      ? setCustomPeriod({...customPeriod, start: new Date(event.target.value)}) 
+      : setCustomPeriod({...customPeriod, finish: new Date(event.target.value)}) 
+  }
     
-
-    const customPeriodHandler = event => {
-        event.target.name === 'start' 
-        ? setCustomPeriod({...customPeriod, start: new Date(event.target.value)}) 
-        : setCustomPeriod({...customPeriod, finish: new Date(event.target.value)}) 
+  const changeCustomPeriodHandler = event => {
+    const start = new Date(customPeriod.start)
+    const finish = new Date(customPeriod.finish)
+    const localLabels = createPeriod(start, finish)
+    setLabels(localLabels) 
+    let localData  
+    if(localLabels.length > labels.length){
+      localData  = {
+        labels: localLabels,
+        datasets: parameters.map(param => ({
+          label: param,
+          data: localLabels.map(() => randomInteger(0, 10000) - randomInteger(0, 10000)),
+          backgroundColor: colors[param],
+          borderColor: colors[param],
+        }))
       }
-    
-      const changeCustomPeriodHandler = event => {
-        const start = new Date(customPeriod.start)
-        const finish = new Date(customPeriod.finish)
-        const localLabels = createPeriod(start, finish)
-        setLabels(localLabels)   
-        if(localLabels.length > labels.length){
-          setData({
-            labels: localLabels,
-            datasets: parameters.map(param => ({
-              label: param,
-              data: localLabels.map(() => randomInteger(0, 10000) - randomInteger(0, 10000)),
-              backgroundColor: colors[param],
-              borderColor: colors[param],
-            }))
-          })
-        } else setData({
-          ...data,
-          labels: localLabels
-        })
-             
+      setData(localData)
+    } else {
+      localData  = {
+        ...data, labels: localLabels
       }
+      setData(localData)
+    }    
+    storage.setItem('data', JSON.stringify(localData))
+    storage.setItem('labels', JSON.stringify(localLabels))
+  }
 
-    const changePeriodHandler = eventKey => {
-        const localLabels = createPeriod(eventKey)
-        setPeriod(eventKey)
-        setLabels(localLabels)
-        if(localLabels.length > labels.length){
-          setData({
-            labels: localLabels,
-            datasets: parameters.map(param => ({
-              label: param,
-              data: localLabels.map(() => randomInteger(0, 10000) - randomInteger(0, 10000)),
-              backgroundColor: colors[param],
-              borderColor: colors[param],
-            }))
-          })
-        } else setData({
-          ...data,
-          labels: localLabels
-        })
-    }
+  const changePeriodHandler = eventKey => {
+      const localLabels = createPeriod(eventKey)
+      setPeriod(eventKey)
+      setLabels(localLabels)
+      let localData
+      if(localLabels.length > labels.length){
+        localData = {
+          labels: localLabels,
+          datasets: parameters.map(param => ({
+            label: param,
+            data: localLabels.map(() => randomInteger(0, 10000) - randomInteger(0, 10000)),
+            backgroundColor: colors[param],
+            borderColor: colors[param],
+          }))
+        }
+        setData(localData)
+      } else {
+        localData = {
+          ...data, labels: localLabels
+        }
+        setData(localData)
+      }
+      storage.setItem('data', JSON.stringify(localData))
+      storage.setItem('labels', JSON.stringify(localLabels))
+      storage.setItem('period', JSON.stringify(eventKey))
+  }
 
-    const switchParams = event => {
-      setVacations(event.target.value === 'Vacations')
-      setParameters([])
-    }
+  const switchParams = event => {
+    setVacations(event.target.value === 'Vacations')
+    setParameters([])
+    storage.setItem('params', JSON.stringify([]))
+    storage.setItem('vac', JSON.stringify(event.target.value === 'Vacations'))
+  }
       
     // const request = async () => {
     //   console.log('clicked!')
@@ -172,7 +186,7 @@ const RussiaCovidApp = () => {
     //   console.log(resp)
     // }
 
-    //здесь поведение добавления различных параметров графика
+  //здесь поведение добавления различных параметров графика
   //сделал так, чтоб последний параметр Diff мог всегда быть только один, потому что он по своей сути
   //производная от остальных графиков
   const parametersHandler = event => {
@@ -193,8 +207,9 @@ const RussiaCovidApp = () => {
 
     setDataByParams(localParams)
     function setDataByParams(localParams){
+      let localData
       if(localParams.length === 1 && localParams[0] === Diff) {
-        setData({
+        localData = {
           labels,
           datasets: localParams.map(item => ({
             label: 'Разница заболевших и выздоровевших',
@@ -202,20 +217,36 @@ const RussiaCovidApp = () => {
             backgroundColor: '#19E154',
             borderColor: '#19E154',
             }))
-          })
+          }
+        setData(localData)
       } else {
-        setData({
-        labels,
-        datasets: localParams.map(item => ({
-          label: item,
-          data: labels.map(() => randomInteger(0, 10000)),
-          backgroundColor: colors[item],
-          borderColor: colors[item],
-          }))
-        })
+        localData = {
+          labels,
+          datasets: localParams.map(item => ({
+            label: item,
+            data: labels.map(() => randomInteger(0, 10000)),
+            backgroundColor: colors[item],
+            borderColor: colors[item],
+            }))
+          }
+        setData(localData)
       }
+      storage.setItem('data', JSON.stringify(localData))
     }
+    storage.setItem('params', JSON.stringify(localParams))
   }
+
+  //скачалка в jpg
+    const downloadGraphHandler = () => {
+      let canv = document.getElementById('canvas')
+      let dataURL = canv.toDataURL('image/png')
+      let image = new Image()
+      image.src = dataURL
+      let link = document.createElement('a')
+      link.setAttribute("href", image.src);
+      link.setAttribute("download", "canvasImage");
+      link.click();
+    }
 
     const periodTitles = {
       '0': 'Произвольный период',
@@ -291,10 +322,10 @@ const RussiaCovidApp = () => {
             </Nav>
             {
               graph === BAR
-              ? <Bar options={options} data={data}></Bar>
-              : <Line options={options} data={data}></Line>
+              ? <Bar id={'canvas'} options={options} data={data}></Bar>
+              : <Line id={'canvas'} options={options} data={data}></Line>
             }
-            <Button onClick={() => alert('Хаха... Не работает ещё!')} style={{marginTop: '20px'}} variant='primary'>Download on PNG</Button>
+            <Button onClick={downloadGraphHandler} style={{marginTop: '20px'}} variant='primary'>Download on PNG</Button>
           </div>
         </main>
         {/* <div>
