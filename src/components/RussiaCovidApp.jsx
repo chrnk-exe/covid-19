@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
-import classes from './RussiaCovidApp.module.css'
+import classes from '../styles/RussiaCovidApp.module.css'
 import {Dropdown, DropdownButton, Button, Nav} from 'react-bootstrap';
 import {Bar, Line} from 'react-chartjs-2'
-import {createPeriod, currentDate, randomInteger, getData, colors, periods, dateHandler} from '../dataApi'
-import forward from './forward.svg'
-import back from './back.svg'
+import {createPeriod, currentDate, randomInteger, getData, colors, periods, dateHandler} from '../data/dataApi'
+import forward from '../assets/forward.svg'
+import back from '../assets/back.svg'
 
 const AllCases = 'Все случаи заражения'
 const NewVacations = 'Новые дозы'

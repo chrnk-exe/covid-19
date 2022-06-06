@@ -1,13 +1,34 @@
 import React, {useState, useEffect} from 'react';
-import classes from './App.module.css';
-import RussiaCovidApp from './RussiaCovid/RussiaCovidApp';
+import classes from '../styles/App.module.css';
+import RussiaCovidApp from './RussiaCovidApp';
 import {Nav} from 'react-bootstrap'
-import WorldCovidApp from './WorldCovid/WorldCovidApp';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const storage = window.localStorage
 
 function App() {
-  const [world, setWorld] = useState(false);
+  // const [world, setWorld] = useState(false);
   useEffect(() => {
     return () => {
       storage.clear()
@@ -18,7 +39,6 @@ function App() {
       <header className={classes.header}>
         <h3 className={classes.logo}>Анализ динамики распространения Covid-19 в России</h3>
       </header>
-      
       <main className={classes.main}>
         <RussiaCovidApp/>
       </main>
