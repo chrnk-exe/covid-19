@@ -1,0 +1,24 @@
+#больной
+{
+    date: dd-mm-yyyy,
+    AllCases(с начала статистики): int,
+    AllRecoveryCases:int, //??
+    TodayCases(то есть сегодня): int,
+    TodayRecoveryCases: int,
+}
+#вакцина 
+{
+    date: dd-mm-yyyy,
+    AllVaccinated: int,
+    FirstDose: int,
+    SecondDose: int 
+}
+#периоды 
+{
+  '0': 'customPeriod',
+  '1': 14,
+  '2': 30,
+  '3': 90,
+  '4': 180,
+  '5': 'allTime',
+}

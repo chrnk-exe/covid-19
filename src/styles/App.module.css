@@ -1,0 +1,65 @@
+.App {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #FFFFF1;
+  position: relative;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 60px;
+  width: 100%;
+  /* background-color: #9eff8b; */
+  padding: 10px 5%;
+  color: #FFFFF1;
+  background-color: darkslategray;
+}
+
+.main {
+  margin-top: 60px;
+  width: 100%;
+  height: 100%;
+  /* padding-inline: 5%; */
+}
+
+header .navigation {
+  padding-left: 5%;
+  /* color: pink */
+}
+
+.navItem {
+  /* padding-inline: 10px; */
+  /* margin-inline: 10px; */
+  width: 200px;
+  text-align: center;
+  font-weight: 700;
+  /* color: #FFFFF1 */
+}
+
+@keyframes magic {
+  from {
+    background-position: 0 0;
+ }
+  to {
+    background-position: 100% 100%;
+ }
+}
+
+.logo:hover {
+  font-weight: 700;
+  background-image: linear-gradient(to right, #fd1d1d, #fcb045, #fcef45, #81fc45, #45d8fc, #5245fc, #af45fc);
+	background-size: 200% 200%;
+  animation: magic 3s infinite linear alternate;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.logo {
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-weight: 700;
+}
